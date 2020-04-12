@@ -31,16 +31,15 @@ public class CookFish extends Task {
         Log.info("Cook");
 
         SceneObject fire = SceneObjects.getNearest(nearest -> nearest.getName().equals("Fire") && nearest.isPositionInteractable());
-        Item[] items = Inventory.getItems(Pattern.compile("Raw .*$"));
+        Item item = Inventory.getFirst(Pattern.compile("Raw .*$"));
+        final int remainingRawFish = Inventory.getCount(Pattern.compile("Raw .*$"));
 
-        if(fire != null) {
-            for (Item item : items) {
-                final int remainingRawFish = Inventory.getCount(Pattern.compile("Raw .*$"));
+        if(fire != null && item != null) {
                 item.interact("Use");
+                Time.sleep(Random.mid(200, 500));
                 fire.interact("Use");
-                Time.sleepUntil(() -> Inventory.getCount(Pattern.compile("Raw .*$")) != remainingRawFish, Random.mid(1500, 2000));
-            }
         }
+        Time.sleepUntil(() -> Inventory.getCount(Pattern.compile("Raw .*$")) != remainingRawFish, Random.mid(3000, 5000));
 
         return Random.mid(800, 1300);
     }

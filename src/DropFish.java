@@ -30,15 +30,16 @@ public class DropFish extends Task {
     @Override
     public int execute() {
         Log.info("Drop");
+        final int remainingSlots = Inventory.getFreeSlots();
 
-        Item[] burntFish = Inventory.getItems(Pattern.compile("Burnt .*$"));
-        for(Item item : burntFish) {
-            final int remainingSlots = Inventory.getFreeSlots();
-            item.interact("Drop");
-            Time.sleepUntil(() -> Inventory.getFreeSlots() != remainingSlots, Random.mid(1500, 2000));
+        if(Inventory.contains(Pattern.compile("Burnt .*$"))){
+            Inventory.getFirst(Pattern.compile("Burnt .*$")).interact("Drop");
+        }
+        else if(Inventory.contains(item -> item.containsAction("Eat"))){
+            Inventory.getFirst(item -> item.containsAction("Eat")).interact("Drop");
         }
 
-        Inven
+        Time.sleepUntil(() -> Inventory.getFreeSlots() != remainingSlots, Random.mid(1500, 2000));
 
         return Random.mid(800, 1300);
     }
